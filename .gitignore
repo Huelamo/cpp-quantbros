@@ -1,8 +1,0 @@
-.idea/
-*.xlsx
-*.csv
-main.cpp
-models.cpp
-engine.hpp
-engine.cpp
-temp.cpp
