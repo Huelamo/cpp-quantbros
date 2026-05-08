@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 
 enum class OptionType{
@@ -7,7 +8,8 @@ enum class OptionType{
 
 class Option { 
 public:
+    double maturity;
     double strike;
     OptionType type;
-    virtual double calculatePayoff(const std::vector<double>& path) = 0;
+    virtual double calculatePayoff(const std::vector<double>& path) const = 0;
 };
