@@ -1,8 +1,6 @@
 #include <iostream>
-#include <ostream>
 
 #include "analytic_pricing_formulas.hpp"
-#include "payoffs.hpp"
 
 int main()
 {
