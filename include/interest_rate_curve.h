@@ -5,23 +5,20 @@
 #pragma once
 #include <vector>
 
-#include "Deposit.hpp"
-#include "interest_rate_pillar.h"
+#include "interest_rate_pillar.hpp"
+#include "compounding_type.hpp"
 
 class InterestRateCurve
 {
     public:
         InterestRateCurve() = default;
+        CompoundingType compounding_type() const;
         std::vector<InterestRatePillar> pillars() const;
-        void set_discount_factor(const InterestRatePillar& pillar);
-        void set_interest_rate_curve_pillar(const Deposit& deposit);
-        void build_discount_curve_from_deposits(const std::vector<Deposit>& deposits);
-        void build_discount_curve_from_discount_factors(const std::vector<InterestRatePillar>& pillars);
-        void build_interest_rate_curve_from_deposits(const std::vector<Deposit>& deposits);
+        void set_pillar(const InterestRatePillar& pillar);
+        void build_curve_from_pillars(const std::vector<InterestRatePillar>& pillars, bool coerce_compounding_type = true);
 
     private:
-        std::vector<InterestRatePillar> discount_curve_;
-        std::vector<Deposit> interest_rate_curve_;
+        std::vector<InterestRatePillar> pillars_;
+        CompoundingType compounding_type_{CompoundingType::Continuous};
 
 };
-

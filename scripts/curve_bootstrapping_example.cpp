@@ -1,48 +1,37 @@
 #include <iostream>
-#include "Deposit.hpp"
-#include "interest_rate_pillar.h"
+#include "interest_rate_pillar.hpp"
 #include "interest_rate_curve.h"
 
 int main()
 {
-    // Instantiate a 1-year deposit
-    DepositAttributes deposit_attributes{
+    CompoundingType compounding = CompoundingType::Continuous;
+    InterestRatePillarAttributes pillar_attributes{
         .tenor = 1.0,
-        .rate = 0.05,
-        .compounding = CompoundingType::Compounded
+        .rate = 0.05
     };
-    Deposit deposit(deposit_attributes);
+    InterestRatePillar pillar(pillar_attributes);
 
-    std::cout << deposit.discount_factor() << std::endl;
-
-    // Set IR pillar attributes from deposit
-    InterestRatePillarAttributes pillar_1y_attributes{
-    .tenor = deposit.tenor(),
-    .discount_factor = deposit.discount_factor()
-    };
-    InterestRatePillar pillar_1y(pillar_1y_attributes);
+    std::cout << pillar.discount_factor(compounding) << std::endl;
 
     // Set the pillar in InterestRateCurve
     InterestRateCurve ir_curve;
-    ir_curve.set_discount_factor(pillar_1y);
+    ir_curve.set_pillar(pillar);
 
-    // Create a vector of deposits
-    std::vector<Deposit> deposits{
-    deposit,
-    Deposit(
-    {.tenor = 2.0,
-                .rate = 0.06,
-                .compounding = CompoundingType::Compounded}
-                ),
-        Deposit(
-    {.tenor = 5.0,
-                .rate = 0.075,
-                .compounding = CompoundingType::Compounded}
-                )
+    // Create a vector of pillars
+    std::vector<InterestRatePillar> pillars{
+        pillar,
+        InterestRatePillar(
+            {.tenor = 2.0,
+                .rate = 0.06}
+        ),
+        InterestRatePillar(
+            {.tenor = 5.0,
+                .rate = 0.075}
+        )
     };
 
-    // Build IR curve from the vector of Deposits
-    ir_curve.build_discount_curve_from_deposits(deposits);
+    // Build IR curve from the vector of pillars
+    ir_curve.build_curve_from_pillars(pillars);
     return 0;
 
 };

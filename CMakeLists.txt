@@ -7,19 +7,15 @@ add_executable(pricing_examples
         scripts/pricing_examples.cpp
         src/engine/analytic_pricing_formulas.cpp
         src/engine/payoffs.cpp
-        src/engine/interest_rate_curve_construction/deposit.cpp
-        include/deposit.hpp
 )
 
 add_executable(curve_bootstrapping
         scripts/curve_bootstrapping_example.cpp
-        src/engine/interest_rate_curve_construction/deposit.cpp
-        include/deposit.hpp
-        include/CompoundingType.hpp
+        include/compounding_type.hpp
         src/engine/interest_rate_curve_construction/interest_rate_curve.cpp
         src/engine/interest_rate_curve_construction/interest_rate_pillar.cpp
         include/interest_rate_curve.h
-        include/interest_rate_pillar.h
+        include/interest_rate_pillar.hpp
 )
 
 target_include_directories(pricing_examples PRIVATE include)
