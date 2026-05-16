@@ -11,7 +11,7 @@ int main()
     };
     InterestRatePillar pillar(pillar_attributes);
 
-    std::cout << pillar.discount_factor(compounding) << std::endl;
+    std::cout << pillar.compute_discount_factor(compounding) << std::endl;
 
     // Set the pillar in InterestRateCurve
     InterestRateCurve ir_curve;
