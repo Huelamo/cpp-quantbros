@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "compounding_type.hpp"
 #include "interest_rate_instrument_type.h"
 
 struct InterestRateInstrumentQuoteAttributes
@@ -11,6 +12,7 @@ struct InterestRateInstrumentQuoteAttributes
     double tenor;
     double quote;
     InterestRateInstrumentType instrument_type;
+    CompoundingType compounding_type;
 };
 
 class InterestRateInstrumentQuote
@@ -20,8 +22,10 @@ class InterestRateInstrumentQuote
         double tenor() const;
         double quote() const;
         InterestRateInstrumentType instrument_type() const;
+        CompoundingType compounding_type() const;
     private:
         double tenor_;
         double quote_;
         InterestRateInstrumentType instrument_type_;
+        CompoundingType compounding_type_;
 };

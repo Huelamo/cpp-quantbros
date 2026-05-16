@@ -6,7 +6,7 @@
 #include "interest_rate_instrument_type.h"
 
 InterestRateInstrumentQuote::InterestRateInstrumentQuote(const InterestRateInstrumentQuoteAttributes& attr):
-    tenor_(attr.tenor), quote_(attr.quote), instrument_type_(attr.instrument_type)
+    tenor_(attr.tenor), quote_(attr.quote), instrument_type_(attr.instrument_type), compounding_type_(attr.compounding_type)
 {
 }
 
@@ -23,4 +23,9 @@ double InterestRateInstrumentQuote::quote() const
 InterestRateInstrumentType InterestRateInstrumentQuote::instrument_type() const
 {
     return instrument_type_;
+}
+
+CompoundingType InterestRateInstrumentQuote::compounding_type() const
+{
+    return compounding_type_;
 }
