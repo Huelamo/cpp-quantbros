@@ -2,11 +2,11 @@
 // Created by Diego Huélamo Longás on 10/05/2026.
 //
 
-#include "deposit.hpp"
+#include "Deposit.hpp"
 
 #include <cmath>
 
-#include "compounding_type.hpp"
+#include "CompoundingType.hpp"
 
 Deposit::Deposit(const DepositAttributes& attributes)
     : tenor_(attributes.tenor), rate_(attributes.rate), compounding_(attributes.compounding)

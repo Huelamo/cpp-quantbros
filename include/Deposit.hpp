@@ -1,6 +1,6 @@
 #pragma once
 
-#include "compounding_type.hpp"
+#include "CompoundingType.hpp"
 
 struct DepositAttributes
 {
