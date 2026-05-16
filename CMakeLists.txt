@@ -12,10 +12,15 @@ add_executable(pricing_examples
 add_executable(curve_bootstrapping
         scripts/curve_bootstrapping_example.cpp
         include/compounding_type.hpp
+        include/interest_rate_instrument_type.h
         src/engine/interest_rate_curve_construction/interest_rate_curve.cpp
         src/engine/interest_rate_curve_construction/interest_rate_pillar.cpp
         include/interest_rate_curve.h
         include/interest_rate_pillar.hpp
+        include/interest_rate_instrument_quote.h
+        src/engine/interest_rate_curve_construction/interest_rate_instrument_quote.cpp
+        include/interest_rate_math.h
+        src/engine/interest_rate_curve_construction/interest_rate_math.cpp
 )
 
 target_include_directories(pricing_examples PRIVATE include)

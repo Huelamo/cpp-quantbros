@@ -7,6 +7,7 @@
 
 #include "interest_rate_pillar.hpp"
 #include "compounding_type.hpp"
+#include "interest_rate_instrument_quote.h"
 
 class InterestRateCurve
 {
@@ -15,10 +16,13 @@ class InterestRateCurve
         CompoundingType compounding_type() const;
         std::vector<InterestRatePillar> pillars() const;
         void set_pillar(const InterestRatePillar& pillar);
-        void build_curve_from_pillars(const std::vector<InterestRatePillar>& pillars, bool coerce_compounding_type = true);
+        void bootstrap_curve(const InterestRateInstrumentQuote& quote) const;
 
     private:
         std::vector<InterestRatePillar> pillars_;
         CompoundingType compounding_type_{CompoundingType::Continuous};
+    void bootstrap_curve_from_deposit(const InterestRateInstrumentQuote& quote) const;
+    void bootstrap_curve_from_fra(const InterestRateInstrumentQuote& quote) const;
+    void bootstrap_curve_from_swap(const InterestRateInstrumentQuote& quote) const;
 
 };
