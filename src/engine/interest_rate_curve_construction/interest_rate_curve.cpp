@@ -5,7 +5,7 @@
 #include "interest_rate_curve.h"
 #include "interest_rate_pillar.hpp"
 
-std::vector<InterestRatePillar> InterestRateCurve::pillars() const
+const std::vector<InterestRatePillar>& InterestRateCurve::pillars() const
 {
     return pillars_;
 }

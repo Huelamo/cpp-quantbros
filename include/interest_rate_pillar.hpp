@@ -7,25 +7,19 @@
 struct InterestRatePillarAttributes
 {
     double tenor;
-    std::optional<double> rate = std::nullopt;
-    std::optional<double> discount_factor = std::nullopt;
+    double discount_factor;
 };
 
 class InterestRatePillar
 {
 public:
     explicit InterestRatePillar(const InterestRatePillarAttributes& attributes);
-
     double tenor() const;
-    static constexpr CompoundingType DefaultCompoundingType = CompoundingType::Continuous;
+    static constexpr auto DefaultCompoundingType = CompoundingType::Continuous;
     double rate(const CompoundingType& compounding = DefaultCompoundingType) const;
-    double discount_factor(const CompoundingType& compounding = DefaultCompoundingType) const;
+    double discount_factor() const;
 private:
     double tenor_;
-    std::optional<double> rate_;
-    std::optional<double> discount_factor_;
-    double compute_discount_factor(const CompoundingType& compounding) const;
-    double compute_zero_coupon_rate(const CompoundingType& compounding) const;
-
+    double discount_factor_;
 };
 

@@ -11,7 +11,7 @@ class InterestRateCurve
 {
     public:
         InterestRateCurve() = default;
-        std::vector<InterestRatePillar> pillars() const;
+        const std::vector<InterestRatePillar>& pillars() const;
         void set_pillar(const InterestRatePillar& pillar);
 
     private:
