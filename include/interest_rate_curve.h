@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "Deposit.hpp"
-#include "InterestRatePillar.h"
+#include "interest_rate_pillar.h"
 
 class InterestRateCurve
 {

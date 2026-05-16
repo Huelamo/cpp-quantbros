@@ -2,8 +2,8 @@
 // Created by Diego Huélamo Longás on 15/05/2026.
 //
 
-#include "InterestRateCurve.h"
-#include "InterestRatePillar.h"
+#include "interest_rate_curve.h"
+#include "interest_rate_pillar.h"
 
 
 std::vector<InterestRatePillar> InterestRateCurve::pillars() const

@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Deposit.hpp"
-#include "InterestRatePillar.h"
-#include "InterestRateCurve.h"
+#include "interest_rate_pillar.h"
+#include "interest_rate_curve.h"
 
 int main()
 {
