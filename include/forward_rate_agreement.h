@@ -3,10 +3,9 @@
 //
 
 #pragma once
-
 #include "interest_rate_instrument_quote.h"
 
-struct DepositAttributes
+struct ForwardRateAgreementAttributes
 {
     // Parent class attributes
     InterestRateInstrumentType instrument_type;
@@ -17,10 +16,10 @@ struct DepositAttributes
     double tenor_years;
 };
 
-class Deposit : public InterestRateInstrumentQuote
+class ForwardRateAgreement : public InterestRateInstrumentQuote
 {
 public:
-    explicit Deposit(const DepositAttributes& attributes);
+    explicit ForwardRateAgreement(const ForwardRateAgreementAttributes& attributes);
     double tenor_years() const;
     void dont_know_yet() const override;
 

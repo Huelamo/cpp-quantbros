@@ -8,6 +8,9 @@
 #include "interest_rate_pillar.hpp"
 #include "interest_rate_curve.h"
 #include "interest_rate_math.h"
+#include "deposit.h"
+#include "forward_rate_agreement.h"
+#include "swap.h"
 
 InterestRateCurve BootstrappingEngine::bootstrap_curve(const InterestRateInstrumentQuote& market_quote)
 {
@@ -16,43 +19,52 @@ InterestRateCurve BootstrappingEngine::bootstrap_curve(const InterestRateInstrum
     return curve;
 }
 
-void BootstrappingEngine::bootstrap_curve(const InterestRateInstrumentQuote& market_quote, InterestRateCurve& curve)
+void BootstrappingEngine::bootstrap_curve(const InterestRateInstrumentQuote& instr, InterestRateCurve& curve)
 {
-    switch (market_quote.instrument_type())
+    switch (instr.instrument_type())
     {
     case InterestRateInstrumentType::Deposit:
-        bootstrap_curve_from_deposit(market_quote, curve);
-        return;
+        {
+            const auto& deposit = dynamic_cast<const Deposit&>(instr);
+            bootstrap_curve_from_deposit(deposit, curve);
+            return;
+        }
     case InterestRateInstrumentType::FRA:
-        bootstrap_curve_from_fra(market_quote, curve);
-        return;
+        {
+            const auto& fra = dynamic_cast<const ForwardRateAgreement&>(instr);
+            bootstrap_curve_from_fra(fra, curve);
+            return;
+        }
     case InterestRateInstrumentType::Swap:
-        // bootstrap_curve_from_swap(market_quote, curve);
-        return;
+        {
+            // const auto& swap = dynamic_cast<const Swap&>(instr);
+            // bootstrap_curve_from_swap(swap, curve);
+            return;
+        }
     }
 
     throw std::runtime_error("Unknown interest rate instrument type");
 }
 
-void BootstrappingEngine::bootstrap_curve_from_deposit(const InterestRateInstrumentQuote& market_quote,
+void BootstrappingEngine::bootstrap_curve_from_deposit(const Deposit& instr,
                                                        InterestRateCurve& curve)
 {
-    double df = InterestRateMath::compute_discount_factor(market_quote.tenor(), market_quote.quote(),
-                                                          market_quote.compounding_type());
+    double df = InterestRateMath::compute_discount_factor(instr.tenor_years(), instr.market_quote(),
+                                                          instr.compounding_type());
     auto pillar = InterestRatePillar({
-        .tenor = market_quote.tenor(),
+        .tenor = instr.tenor_years(),
         .discount_factor = df
     });
     curve.set_pillar(pillar);
 }
 
-void BootstrappingEngine::bootstrap_curve_from_fra(const InterestRateInstrumentQuote& market_quote,
+void BootstrappingEngine::bootstrap_curve_from_fra(const ForwardRateAgreement& instr,
                                                    InterestRateCurve& curve)
 {
     std::optional<InterestRatePillar> previous_pillar = std::nullopt;
     for (const auto& pillar : curve.pillars())
     {
-        if (pillar.tenor() < market_quote.tenor() && ((!previous_pillar.has_value()) || (pillar.tenor() >
+        if (pillar.tenor() < instr.tenor_years() && ((!previous_pillar.has_value()) || (pillar.tenor() >
             previous_pillar->tenor())))
         {
             previous_pillar = pillar;
@@ -63,9 +75,9 @@ void BootstrappingEngine::bootstrap_curve_from_fra(const InterestRateInstrumentQ
         throw std::runtime_error("Cannot bootstrap FRA: no previous pillar found.");
     }
     double df_ini = previous_pillar->discount_factor();
-    const double tau = market_quote.tenor() - previous_pillar->tenor();
-    double df_end = df_ini / (1 + market_quote.quote() * tau);
-    const auto new_pillar = InterestRatePillar({.tenor = market_quote.tenor(), .discount_factor = df_end});
+    const double tau = instr.tenor_years() - previous_pillar->tenor();
+    double df_end = df_ini / (1 + instr.market_quote() * tau);
+    const auto new_pillar = InterestRatePillar({.tenor = instr.tenor_years(), .discount_factor = df_end});
     curve.set_pillar(new_pillar);
 }
 

@@ -6,21 +6,22 @@
 #include "compounding_type.hpp"
 
 Deposit::Deposit(const DepositAttributes& attributes)
-    : tenor_(attributes.tenor), quote_(attributes.quote), compounding_(attributes.compounding)
+    : InterestRateInstrumentQuote(
+          {
+              .market_quote = attributes.market_quote,
+              .instrument_type = InterestRateInstrumentType::Deposit,
+              .compounding = attributes.compounding
+          }),
+      tenor_years_(attributes.tenor_years)
 {
 }
 
-double Deposit::tenor() const
+double Deposit::tenor_years() const
 {
-    return tenor_;
+    return tenor_years_;
 }
 
-double Deposit::quote() const
+void Deposit::dont_know_yet() const
 {
-    return quote_;
-}
-
-CompoundingType Deposit::compounding() const
-{
-    return compounding_;
+    return;
 }

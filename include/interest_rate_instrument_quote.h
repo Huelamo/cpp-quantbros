@@ -9,23 +9,25 @@
 
 struct InterestRateInstrumentQuoteAttributes
 {
-    double tenor;
-    double quote;
     InterestRateInstrumentType instrument_type;
-    CompoundingType compounding_type;
+    CompoundingType compounding;
+    double market_quote;
 };
 
 class InterestRateInstrumentQuote
 {
-    public:
-        explicit InterestRateInstrumentQuote(const InterestRateInstrumentQuoteAttributes& attr);
-        double tenor() const;
-        double quote() const;
-        InterestRateInstrumentType instrument_type() const;
-        CompoundingType compounding_type() const;
-    private:
-        double tenor_;
-        double quote_;
-        InterestRateInstrumentType instrument_type_;
-        CompoundingType compounding_type_;
+public:
+    virtual ~InterestRateInstrumentQuote() = default;
+    double market_quote() const;
+    InterestRateInstrumentType instrument_type() const;
+    CompoundingType compounding_type() const;
+    virtual void dont_know_yet() const = 0;
+    // TODO: this is just to make the class abstract, will be removed when we have a common interface for all instruments
+protected:
+    explicit InterestRateInstrumentQuote(const InterestRateInstrumentQuoteAttributes& attr);
+
+private:
+    const double market_quote_;
+    InterestRateInstrumentType instrument_type_;
+    CompoundingType compounding_type_;
 };

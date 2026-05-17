@@ -18,13 +18,17 @@ add_executable(curve_bootstrapping
         include/interest_rate_curve.h
         include/interest_rate_pillar.hpp
         include/interest_rate_instrument_quote.h
-        src/engine/interest_rate_curve_construction/interest_rate_instrument_quote.cpp
+        src/instruments/base_classes/interest_rate_instrument_quote.cpp
         include/interest_rate_math.h
         src/engine/interest_rate_curve_construction/interest_rate_math.cpp
         include/bootstrapping_engine.h
         src/engine/interest_rate_curve_construction/bootstrapping_engine.cpp
         include/deposit.h
         src/instruments/deposit.cpp
+        include/forward_rate_agreement.h
+        src/instruments/forward_rate_agreement.cpp
+        include/swap.h
+        src/instruments/swap.cpp
 )
 
 target_include_directories(pricing_examples PRIVATE include)
