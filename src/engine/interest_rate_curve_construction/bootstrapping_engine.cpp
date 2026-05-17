@@ -34,9 +34,11 @@ void BootstrappingEngine::bootstrap_curve(const InterestRateInstrumentQuote& mar
     throw std::runtime_error("Unknown interest rate instrument type");
 }
 
-void BootstrappingEngine::bootstrap_curve_from_deposit(const InterestRateInstrumentQuote& market_quote, InterestRateCurve& curve)
+void BootstrappingEngine::bootstrap_curve_from_deposit(const InterestRateInstrumentQuote& market_quote,
+                                                       InterestRateCurve& curve)
 {
-    double df = InterestRateMath::compute_discount_factor(market_quote.tenor(), market_quote.quote(), market_quote.compounding_type());
+    double df = InterestRateMath::compute_discount_factor(market_quote.tenor(), market_quote.quote(),
+                                                          market_quote.compounding_type());
     auto pillar = InterestRatePillar({
         .tenor = market_quote.tenor(),
         .discount_factor = df
@@ -44,12 +46,14 @@ void BootstrappingEngine::bootstrap_curve_from_deposit(const InterestRateInstrum
     curve.set_pillar(pillar);
 }
 
-void BootstrappingEngine::bootstrap_curve_from_fra(const InterestRateInstrumentQuote& market_quote, InterestRateCurve& curve)
+void BootstrappingEngine::bootstrap_curve_from_fra(const InterestRateInstrumentQuote& market_quote,
+                                                   InterestRateCurve& curve)
 {
     std::optional<InterestRatePillar> previous_pillar = std::nullopt;
     for (const auto& pillar : curve.pillars())
     {
-        if (pillar.tenor() <  market_quote.tenor() && ((!previous_pillar.has_value()) || (pillar.tenor() > previous_pillar->tenor())))
+        if (pillar.tenor() < market_quote.tenor() && ((!previous_pillar.has_value()) || (pillar.tenor() >
+            previous_pillar->tenor())))
         {
             previous_pillar = pillar;
         }
@@ -61,6 +65,23 @@ void BootstrappingEngine::bootstrap_curve_from_fra(const InterestRateInstrumentQ
     double df_ini = previous_pillar->discount_factor();
     const double tau = market_quote.tenor() - previous_pillar->tenor();
     double df_end = df_ini / (1 + market_quote.quote() * tau);
-    const auto new_pillar = InterestRatePillar({.tenor= market_quote.tenor(), .discount_factor= df_end});
+    const auto new_pillar = InterestRatePillar({.tenor = market_quote.tenor(), .discount_factor = df_end});
     curve.set_pillar(new_pillar);
 }
+
+
+// void BootstrappingEngine::bootstrap_curve_from_swap(const InterestRateInstrumentQuote& market_quote,
+//                                                     InterestRateCurve& curve)
+// {
+//     std::optional<std::vector<InterestRatePillar>> previous_pillars = std::nullopt;
+//     int i = 0;
+//     for (const auto& pillar : curve.pillars())
+//     {
+//         if (pillar.tenor() < market_quote.tenor() && ((!previous_pillars.has_value()) || (pillar.tenor() > (*
+//             previous_pillars)[i].tenor())))
+//         {
+//             previous_pillars->push_back(pillar);
+//             i++;
+//         }
+//     }
+// }

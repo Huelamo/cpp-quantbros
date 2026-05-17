@@ -14,5 +14,5 @@ class BootstrappingEngine
     private:
         static void bootstrap_curve_from_deposit(const InterestRateInstrumentQuote& market_quote, InterestRateCurve& curve);
         static void bootstrap_curve_from_fra(const InterestRateInstrumentQuote& market_quote, InterestRateCurve& curve);
-        static void bootstrap_curve_from_swap(const InterestRateInstrumentQuote& market_quote, InterestRateCurve& curve);
+        // static void bootstrap_curve_from_swap(const InterestRateInstrumentQuote& market_quote, InterestRateCurve& curve);
 };
