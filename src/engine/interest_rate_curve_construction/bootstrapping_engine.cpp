@@ -27,7 +27,7 @@ void BootstrappingEngine::bootstrap_curve(const InterestRateInstrumentQuote& mar
         bootstrap_curve_from_fra(market_quote, curve);
         return;
     case InterestRateInstrumentType::Swap:
-        bootstrap_curve_from_swap(market_quote, curve);
+        // bootstrap_curve_from_swap(market_quote, curve);
         return;
     }
 

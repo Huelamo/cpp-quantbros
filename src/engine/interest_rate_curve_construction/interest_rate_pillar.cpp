@@ -17,10 +17,10 @@ double InterestRatePillar::tenor() const
 
 double InterestRatePillar::discount_factor() const
 {
-    return discount_factor_.value();
+    return discount_factor_;
 }
 
 double InterestRatePillar::rate(const CompoundingType& compounding) const
 {
-    return InterestRateMath::compute_zero_coupon_rate(tenor_, discount_factor_.value(), compounding);
+    return InterestRateMath::compute_zero_coupon_rate(tenor_, discount_factor_, compounding);
 }

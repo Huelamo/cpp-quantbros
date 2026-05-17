@@ -23,6 +23,8 @@ add_executable(curve_bootstrapping
         src/engine/interest_rate_curve_construction/interest_rate_math.cpp
         include/bootstrapping_engine.h
         src/engine/interest_rate_curve_construction/bootstrapping_engine.cpp
+        include/deposit.h
+        src/instruments/deposit.cpp
 )
 
 target_include_directories(pricing_examples PRIVATE include)
