@@ -9,29 +9,23 @@ Swap::Swap(const SwapAttributes& attributes)
           {
               .instrument_type = InterestRateInstrumentType::Swap,
               .compounding = attributes.compounding,
-              .market_quote = attributes.market_quote
+              .market_quote = attributes.market_quote,
+              .time_to_maturity_years = attributes.time_to_maturity_years
           }),
-      tenor_start_(attributes.tenor_start),
-      tenor_maturity_(attributes.tenor_maturity),
+      tenor_start_years_(attributes.tenor_start_years),
       fixed_leg_period_(attributes.fixed_leg_period)
 {
 }
 
 double Swap::tenor_start() const
 {
-    return tenor_start_;
+    return tenor_start_years_;
 }
 
-double Swap::tenor_maturity() const
-{
-    return tenor_maturity_;
-}
-
-double Swap::fixed_leg_period() const
+double Swap::fixed_leg_period_years() const
 {
     return fixed_leg_period_;
 }
-
 
 void Swap::dont_know_yet() const
 {

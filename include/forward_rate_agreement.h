@@ -11,9 +11,7 @@ struct ForwardRateAgreementAttributes
     InterestRateInstrumentType instrument_type;
     CompoundingType compounding;
     double market_quote;
-
-    // Child class attributes
-    double tenor_years;
+    double time_to_maturity_years;
 };
 
 class ForwardRateAgreement : public InterestRateInstrumentQuote
@@ -22,7 +20,4 @@ public:
     explicit ForwardRateAgreement(const ForwardRateAgreementAttributes& attributes);
     double tenor_years() const;
     void dont_know_yet() const override;
-
-private:
-    double tenor_years_;
 };

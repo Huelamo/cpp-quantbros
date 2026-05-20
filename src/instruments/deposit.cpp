@@ -7,18 +7,13 @@
 
 Deposit::Deposit(const DepositAttributes& attributes)
     : InterestRateInstrumentQuote(
-          {
-              .market_quote = attributes.market_quote,
-              .instrument_type = InterestRateInstrumentType::Deposit,
-              .compounding = attributes.compounding
-          }),
-      tenor_years_(attributes.tenor_years)
+        {
+            .instrument_type = InterestRateInstrumentType::Deposit,
+            .compounding = attributes.compounding,
+            .market_quote = attributes.market_quote,
+            .time_to_maturity_years = attributes.time_to_maturity_years
+        })
 {
-}
-
-double Deposit::tenor_years() const
-{
-    return tenor_years_;
 }
 
 void Deposit::dont_know_yet() const

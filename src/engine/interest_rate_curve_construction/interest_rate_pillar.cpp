@@ -7,12 +7,12 @@
 #include "interest_rate_math.h"
 
 InterestRatePillar::InterestRatePillar(const InterestRatePillarAttributes& attributes)
-    : tenor_(attributes.tenor), discount_factor_(attributes.discount_factor)
+    : tenor_years_(attributes.tenor_years), discount_factor_(attributes.discount_factor)
 {
 }
-double InterestRatePillar::tenor() const
+double InterestRatePillar::tenor_years() const
 {
-    return tenor_;
+    return tenor_years_;
 }
 
 double InterestRatePillar::discount_factor() const
@@ -22,5 +22,5 @@ double InterestRatePillar::discount_factor() const
 
 double InterestRatePillar::rate(const CompoundingType& compounding) const
 {
-    return InterestRateMath::compute_zero_coupon_rate(tenor_, discount_factor_, compounding);
+    return InterestRateMath::compute_zero_coupon_rate(tenor_years_, discount_factor_, compounding);
 }

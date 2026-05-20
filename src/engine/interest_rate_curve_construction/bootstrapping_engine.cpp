@@ -37,22 +37,41 @@ void BootstrappingEngine::bootstrap_curve(const InterestRateInstrumentQuote& ins
         }
     case InterestRateInstrumentType::Swap:
         {
-            // const auto& swap = dynamic_cast<const Swap&>(instr);
-            // bootstrap_curve_from_swap(swap, curve);
-            return;
+            const auto& swap = dynamic_cast<const Swap&>(instr);
+            return bootstrap_curve_from_swap(swap, curve);
         }
     }
 
     throw std::runtime_error("Unknown interest rate instrument type");
 }
 
+std::vector<InterestRatePillar> BootstrappingEngine::get_previous_pillars(
+    const InterestRateInstrumentQuote& instr, const InterestRateCurve& curve)
+{
+    const auto& pillars = curve.pillars();
+    const auto it = std::lower_bound(
+        pillars.begin(),
+        pillars.end(),
+        instr.time_to_maturity_years(),
+        [](const InterestRatePillar& pillar, const double tenor)
+        {
+            return pillar.tenor_years() < tenor;
+        }
+    );
+    if (it == pillars.begin())
+    {
+        throw std::runtime_error("Cannot bootstrap curve: no previous pillar found.");
+    }
+    return std::vector<InterestRatePillar>(pillars.begin(), it);
+}
+
 void BootstrappingEngine::bootstrap_curve_from_deposit(const Deposit& instr,
                                                        InterestRateCurve& curve)
 {
-    double df = InterestRateMath::compute_discount_factor(instr.tenor_years(), instr.market_quote(),
-                                                          instr.compounding_type());
-    auto pillar = InterestRatePillar({
-        .tenor = instr.tenor_years(),
+    const double df = InterestRateMath::compute_discount_factor(instr.time_to_maturity_years(), instr.market_quote(),
+                                                                instr.compounding_type());
+    const auto pillar = InterestRatePillar({
+        .tenor_years = instr.time_to_maturity_years(),
         .discount_factor = df
     });
     curve.set_pillar(pillar);
@@ -61,39 +80,32 @@ void BootstrappingEngine::bootstrap_curve_from_deposit(const Deposit& instr,
 void BootstrappingEngine::bootstrap_curve_from_fra(const ForwardRateAgreement& instr,
                                                    InterestRateCurve& curve)
 {
-    std::optional<InterestRatePillar> previous_pillar = std::nullopt;
-    for (const auto& pillar : curve.pillars())
-    {
-        if (pillar.tenor() < instr.tenor_years() && ((!previous_pillar.has_value()) || (pillar.tenor() >
-            previous_pillar->tenor())))
-        {
-            previous_pillar = pillar;
-        }
-    }
-    if (!previous_pillar.has_value())
-    {
-        throw std::runtime_error("Cannot bootstrap FRA: no previous pillar found.");
-    }
-    double df_ini = previous_pillar->discount_factor();
-    const double tau = instr.tenor_years() - previous_pillar->tenor();
-    double df_end = df_ini / (1 + instr.market_quote() * tau);
-    const auto new_pillar = InterestRatePillar({.tenor = instr.tenor_years(), .discount_factor = df_end});
-    curve.set_pillar(new_pillar);
+    const auto previous_pillars = get_previous_pillars(instr, curve);
+    const auto& previous_pillar = previous_pillars.back();
+    const double tau = instr.time_to_maturity_years() - previous_pillar.tenor_years();
+    const double maturity_df = previous_pillar.discount_factor() / (1 + instr.market_quote() * tau);
+    const auto new_pillar_df = InterestRatePillar({
+        .tenor_years = instr.time_to_maturity_years(), .discount_factor = maturity_df
+    });
+    curve.set_pillar(new_pillar_df);
 }
 
 
-// void BootstrappingEngine::bootstrap_curve_from_swap(const InterestRateInstrumentQuote& market_quote,
-//                                                     InterestRateCurve& curve)
-// {
-//     std::optional<std::vector<InterestRatePillar>> previous_pillars = std::nullopt;
-//     int i = 0;
-//     for (const auto& pillar : curve.pillars())
-//     {
-//         if (pillar.tenor() < market_quote.tenor() && ((!previous_pillars.has_value()) || (pillar.tenor() > (*
-//             previous_pillars)[i].tenor())))
-//         {
-//             previous_pillars->push_back(pillar);
-//             i++;
-//         }
-//     }
-// }
+void BootstrappingEngine::bootstrap_curve_from_swap(const Swap& instr, InterestRateCurve& curve)
+{
+    const auto previous_pillars = get_previous_pillars(instr, curve);
+
+    const auto day_count_fraction = instr.fixed_leg_period_years();
+    const auto swap_rate = instr.market_quote();
+    double annuity = 0.0;
+    for (auto& pillar : previous_pillars)
+    {
+        annuity += pillar.discount_factor() * day_count_fraction;
+    }
+    const double maturity_df = (1.0 - swap_rate * annuity) / (1.0 + swap_rate * day_count_fraction);
+    const auto new_pillar = InterestRatePillar({
+        .tenor_years = instr.time_to_maturity_years(),
+        .discount_factor = maturity_df
+    });
+    curve.set_pillar(new_pillar);
+}

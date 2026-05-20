@@ -14,7 +14,7 @@ int main()
     auto deposit = Deposit({
         .compounding = compounding,
         .market_quote = 0.02, // 2% interest rate
-        .tenor_years = 0.5 // 6 months
+        .time_to_maturity_years = 0.5 // 6 months
     });
 
     // Bootstrap the DF from the deposit quote
@@ -24,7 +24,7 @@ int main()
     auto fra = ForwardRateAgreement({
         .compounding = compounding,
         .market_quote = 0.027,
-        .tenor_years = 1.0
+        .time_to_maturity_years = 1.0
     });
 
     // Bootstrap the DF from the FRA quote
@@ -34,13 +34,13 @@ int main()
     auto swap = Swap({
         .compounding = compounding,
         .market_quote = 0.032,
-        .tenor_start = 0.0,
-        .tenor_maturity = 5.0,
+        .time_to_maturity_years = 2.0,
+        .tenor_start_years = 0.0,
         .fixed_leg_period = 1.0
     });
 
     // Bootstrap the DF from the Swap quote
-    // BootstrappingEngine::bootstrap_curve(swap, ir_curve);
+    BootstrappingEngine::bootstrap_curve(swap, ir_curve);
 
     return 0;
 };

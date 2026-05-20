@@ -12,18 +12,12 @@ struct DepositAttributes
     InterestRateInstrumentType instrument_type;
     CompoundingType compounding;
     double market_quote;
-
-    // Child class attributes
-    double tenor_years;
+    double time_to_maturity_years;
 };
 
 class Deposit : public InterestRateInstrumentQuote
 {
 public:
     explicit Deposit(const DepositAttributes& attributes);
-    double tenor_years() const;
     void dont_know_yet() const override;
-
-private:
-    double tenor_years_;
 };

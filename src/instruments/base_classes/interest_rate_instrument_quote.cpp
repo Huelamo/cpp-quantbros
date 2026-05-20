@@ -6,7 +6,8 @@
 #include "interest_rate_instrument_type.h"
 
 InterestRateInstrumentQuote::InterestRateInstrumentQuote(const InterestRateInstrumentQuoteAttributes& attr) :
-    market_quote_(attr.market_quote), instrument_type_(attr.instrument_type), compounding_type_(attr.compounding)
+    market_quote_(attr.market_quote), instrument_type_(attr.instrument_type), compounding_type_(attr.compounding),
+    time_to_maturity_years_(attr.time_to_maturity_years)
 {
 }
 
@@ -14,6 +15,11 @@ InterestRateInstrumentQuote::InterestRateInstrumentQuote(const InterestRateInstr
 double InterestRateInstrumentQuote::market_quote() const
 {
     return market_quote_;
+}
+
+double InterestRateInstrumentQuote::time_to_maturity_years() const
+{
+    return time_to_maturity_years_;
 }
 
 InterestRateInstrumentType InterestRateInstrumentQuote::instrument_type() const
