@@ -4,13 +4,13 @@
 
 #pragma once
 #include "compounding_type.hpp"
+#include "interest_rate_curve.h"
 
 class InterestRateMath
 {
-    public:
-        static double compute_discount_factor(double tenor, double rate, const CompoundingType& compounding);
-        static double compute_zero_coupon_rate(double tenor, double discount_factor, const CompoundingType& compounding);
-
+public:
+    static double compute_discount_factor(double tenor, double rate, const CompoundingType& compounding);
+    static double compute_zero_coupon_rate(double tenor, double discount_factor, const CompoundingType& compounding);
+    static double linear_interpolation_flat_extrapolation(const std::vector<InterestRatePillar>& pillars,
+                                                          const double tenor_years);
 };
-
-

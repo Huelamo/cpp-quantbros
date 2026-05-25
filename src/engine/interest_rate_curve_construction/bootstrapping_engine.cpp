@@ -45,26 +45,6 @@ void BootstrappingEngine::bootstrap_curve(const InterestRateInstrumentQuote& ins
     throw std::runtime_error("Unknown interest rate instrument type");
 }
 
-std::vector<InterestRatePillar> BootstrappingEngine::get_previous_pillars(
-    const InterestRateInstrumentQuote& instr, const InterestRateCurve& curve)
-{
-    const auto& pillars = curve.pillars();
-    const auto it = std::lower_bound(
-        pillars.begin(),
-        pillars.end(),
-        instr.time_to_maturity_years(),
-        [](const InterestRatePillar& pillar, const double tenor)
-        {
-            return pillar.tenor_years() < tenor;
-        }
-    );
-    if (it == pillars.begin())
-    {
-        throw std::runtime_error("Cannot bootstrap curve: no previous pillar found.");
-    }
-    return std::vector<InterestRatePillar>(pillars.begin(), it);
-}
-
 void BootstrappingEngine::bootstrap_curve_from_deposit(const Deposit& instr,
                                                        InterestRateCurve& curve)
 {
@@ -80,7 +60,7 @@ void BootstrappingEngine::bootstrap_curve_from_deposit(const Deposit& instr,
 void BootstrappingEngine::bootstrap_curve_from_fra(const ForwardRateAgreement& instr,
                                                    InterestRateCurve& curve)
 {
-    const auto previous_pillars = get_previous_pillars(instr, curve);
+    const auto previous_pillars = curve.get_previous_pillars(instr.time_to_maturity_years());
     const auto& previous_pillar = previous_pillars.back();
     const double tau = instr.time_to_maturity_years() - previous_pillar.tenor_years();
     const double maturity_df = previous_pillar.discount_factor() / (1 + instr.market_quote() * tau);
@@ -93,8 +73,7 @@ void BootstrappingEngine::bootstrap_curve_from_fra(const ForwardRateAgreement& i
 
 void BootstrappingEngine::bootstrap_curve_from_swap(const Swap& instr, InterestRateCurve& curve)
 {
-    const auto previous_pillars = get_previous_pillars(instr, curve);
-
+    const auto previous_pillars = curve.get_previous_pillars(instr.time_to_maturity_years());
     const auto day_count_fraction = instr.fixed_leg_period_years();
     const auto swap_rate = instr.market_quote();
     double annuity = 0.0;

@@ -13,7 +13,8 @@ class InterestRateCurve
         InterestRateCurve() = default;
         const std::vector<InterestRatePillar>& pillars() const;
         void set_pillar(const InterestRatePillar& pillar);
-
+        std::vector<InterestRatePillar> get_previous_pillars(const double& tenor_years) const;
+        double get_discount_factor(const double& tenor) const;
     private:
         std::vector<InterestRatePillar> pillars_;
 

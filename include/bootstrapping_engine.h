@@ -15,7 +15,6 @@ class BootstrappingEngine
         static InterestRateCurve bootstrap_curve(const InterestRateInstrumentQuote& market_quote);
         static void bootstrap_curve(const InterestRateInstrumentQuote& instr, InterestRateCurve& curve);
     private:
-        static std::vector<InterestRatePillar> get_previous_pillars(const InterestRateInstrumentQuote& instr, const InterestRateCurve& curve);
         static void bootstrap_curve_from_deposit(const Deposit& instr, InterestRateCurve& curve);
         static void bootstrap_curve_from_fra(const ForwardRateAgreement& instr, InterestRateCurve& curve);
         static void bootstrap_curve_from_swap(const Swap& instr, InterestRateCurve& curve);

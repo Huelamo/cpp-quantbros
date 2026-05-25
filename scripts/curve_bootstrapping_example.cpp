@@ -42,5 +42,8 @@ int main()
     // Bootstrap the DF from the Swap quote
     BootstrappingEngine::bootstrap_curve(swap, ir_curve);
 
+    // Now test extrapolation
+    double df = ir_curve.get_discount_factor(0.75);
+
     return 0;
 };
