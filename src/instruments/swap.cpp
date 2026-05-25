@@ -27,7 +27,7 @@ double Swap::fixed_leg_period_years() const
     return fixed_leg_period_;
 }
 
-void Swap::dont_know_yet() const
+double Swap::implied_quote(const InterestRateCurve& curve) const
 {
-    return;
+    return 0.0;
 }

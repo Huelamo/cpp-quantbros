@@ -15,7 +15,7 @@ ForwardRateAgreement::ForwardRateAgreement(const ForwardRateAgreementAttributes&
 {
 }
 
-void ForwardRateAgreement::dont_know_yet() const
+double ForwardRateAgreement::implied_quote(const InterestRateCurve& curve) const
 {
-    return;
+    return 0.0;
 }

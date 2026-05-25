@@ -18,6 +18,6 @@ class ForwardRateAgreement : public InterestRateInstrumentQuote
 {
 public:
     explicit ForwardRateAgreement(const ForwardRateAgreementAttributes& attributes);
-    double tenor_years() const;
-    void dont_know_yet() const override;
+    double implied_quote(const InterestRateCurve& curve) const override;
+
 };

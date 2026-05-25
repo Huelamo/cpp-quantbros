@@ -4,6 +4,7 @@
 
 #include "deposit.h"
 #include "compounding_type.hpp"
+#include "interest_rate_math.h"
 
 Deposit::Deposit(const DepositAttributes& attributes)
     : InterestRateInstrumentQuote(
@@ -16,7 +17,8 @@ Deposit::Deposit(const DepositAttributes& attributes)
 {
 }
 
-void Deposit::dont_know_yet() const
+double Deposit::implied_quote(const InterestRateCurve& curve) const
 {
-    return;
+    double df = curve.get_discount_factor(time_to_maturity_years());
+    return InterestRateMath::compute_zero_coupon_rate(time_to_maturity_years(), df, compounding_type());
 }

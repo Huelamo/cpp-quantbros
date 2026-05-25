@@ -6,6 +6,7 @@
 
 #include "compounding_type.hpp"
 #include "interest_rate_instrument_type.h"
+#include "interest_rate_curve.h"
 
 struct InterestRateInstrumentQuoteAttributes
 {
@@ -23,8 +24,7 @@ public:
     double time_to_maturity_years() const;
     InterestRateInstrumentType instrument_type() const;
     CompoundingType compounding_type() const;
-    virtual void dont_know_yet() const = 0;
-    // TODO: this is just to make the class abstract, will be removed when we have a common interface for all instruments
+    virtual double implied_quote(const InterestRateCurve& curve) const = 0;
 protected:
     explicit InterestRateInstrumentQuote(const InterestRateInstrumentQuoteAttributes& attr);
 

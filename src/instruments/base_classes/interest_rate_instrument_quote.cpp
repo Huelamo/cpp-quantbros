@@ -11,7 +11,6 @@ InterestRateInstrumentQuote::InterestRateInstrumentQuote(const InterestRateInstr
 {
 }
 
-
 double InterestRateInstrumentQuote::market_quote() const
 {
     return market_quote_;

@@ -26,7 +26,8 @@ public:
     explicit Swap(const SwapAttributes& attr);
     double tenor_start() const;
     double fixed_leg_period_years() const;
-    void dont_know_yet() const override;
+    double implied_quote(const InterestRateCurve& curve) const override;
+
 
 private:
     double tenor_start_years_;

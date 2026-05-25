@@ -20,6 +20,9 @@ int main()
     // Bootstrap the DF from the deposit quote
     auto ir_curve = BootstrappingEngine::bootstrap_curve(deposit);
 
+    // Check that we can get back the market quote from the bootstrapped curve
+    auto implied_quote_deposit = deposit.implied_quote(ir_curve);
+
     // Initialize a market quote for a FRA
     auto fra = ForwardRateAgreement({
         .compounding = compounding,
